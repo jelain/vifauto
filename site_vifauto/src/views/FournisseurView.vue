@@ -30,10 +30,7 @@ export default {
 
   methods: {
     navigateToDetails(fournisseurId) {
-      // Logique pour déterminer le chemin du lien en fonction de vos besoins
-      const link = `/fournisseur/id=${fournisseurId}`; // Utiliser l'ID du fournisseur dans le lien
-
-      // Utiliser $router.push pour naviguer vers le nouveau chemin
+      const link = `/fournisseur/id=${fournisseurId}`;
       this.$router.push(link);
     },
   },

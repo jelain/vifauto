@@ -6,14 +6,12 @@
         :key="fournisseur.id"
         class="container"
       >
-        <!-- Boucle v-for pour les images -->
         <div class="image">
           <img
             :src="getImageUrl(fournisseur.image_url)"
             :alt="fournisseur.nom"
           />
         </div>
-        <!-- Ajout de la div sep après chaque image, sauf la dernière -->
         <div class="sep" v-if="index < fournisseurs.length - 1"></div>
       </div>
     </div>
@@ -41,7 +39,6 @@ export default {
   },
   methods: {
     getImageUrl(url) {
-      // Assumez que vos images sont dans le dossier public/fournisseur
       return `/fournisseur/${url}`;
     },
   },

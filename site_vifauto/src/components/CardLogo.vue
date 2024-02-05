@@ -8,12 +8,10 @@
 export default {
   props: {
     nom: String,
-    image_url: String, // Add the prop for image_url
+    image_url: String,
   },
   methods: {
     getImageUrl(url) {
-      // Assuming the base path is "../assets/fournisseur/"
-      // Adjust the base path based on the route
       const basePath = this.$route.path.includes("fournisseur")
         ? "/fournisseur/"
         : "/marque/";
