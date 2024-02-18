@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import App from "./App.vue";
 import FournisseurView from "./views/FournisseurView.vue";
 import MarqueView from "./views/MarqueView.vue";
-import FournisseurDetail from "./views/FournisseurDetail.vue";
+import FournisseurDetail from "./views/FournisseurDetailView.vue";
 
 const routes = [
   { path: "/:pathMatch(.*)*", redirect: "/fournisseur" },

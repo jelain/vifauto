@@ -6,7 +6,7 @@
         :key="fournisseur.id"
         class="container"
       >
-        <div class="image">
+        <div class="image" @click="navigateToDetails(fournisseur.id)">
           <img
             :src="getImageUrl(fournisseur.image_url)"
             :alt="fournisseur.nom"
@@ -37,9 +37,14 @@ export default {
         console.error("Erreur lors de la récupération des fournisseurs", error);
       });
   },
+
   methods: {
     getImageUrl(url) {
       return `/fournisseur/${url}`;
+    },
+    navigateToDetails(fournisseurId) {
+      const link = `/fournisseur/id=${fournisseurId}`;
+      this.$router.push(link);
     },
   },
 };

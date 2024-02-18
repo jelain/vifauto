@@ -15,13 +15,11 @@
 
 <script>
 import axios from "axios";
-
 import CardLogo from "../components/CardLogo.vue";
 export default {
   components: {
     CardLogo,
   },
-
   data() {
     return {
       fournisseurs: [],

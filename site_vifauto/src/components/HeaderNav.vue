@@ -66,7 +66,6 @@ export default {
     }
     ul {
       display: flex;
-
       justify-content: space-between;
       list-style: none;
       height: 100%;
