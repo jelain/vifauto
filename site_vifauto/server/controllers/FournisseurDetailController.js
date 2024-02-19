@@ -73,4 +73,16 @@ module.exports = {
       return res.status(500).json({ error: "Internal server error" });
     }
   },
+
+  getNotesByFournisseurId: async (req, res) => {
+    const { fournisseurId } = req.params;
+    try {
+      const notes = await dbModel.getNotesByFournisseurId(fournisseurId);
+      res.json(notes);
+    } catch (error) {
+      res.status(500).json({
+        error: "Une erreur s'est produite lors de la récupération des notes.",
+      });
+    }
+  },
 };

@@ -2,7 +2,7 @@ const { Pool } = require("pg");
 
 const pool = new Pool({
   user: "jelain",
-  database: "vifauto",
+  database: "vifautov2",
   password: "28Juin1978",
 });
 
@@ -99,6 +99,12 @@ const dbModel = {
     } catch (error) {
       throw new Error(`Error updating horaire: ${error.message}`);
     }
+  },
+
+  getNotesByFournisseurId: async (fournisseurId) => {
+    const query = "SELECT * FROM tempsreponse WHERE id = $1";
+    const { rows } = await pool.query(query, [fournisseurId]);
+    return rows;
   },
 };
 

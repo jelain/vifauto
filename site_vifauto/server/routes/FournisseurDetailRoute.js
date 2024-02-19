@@ -25,4 +25,9 @@ router.get(
 
 router.put("/horaires/set/id=:jourId", categorie_controller.updateHoraire);
 
+router.get(
+  "/notes/id=:fournisseurId",
+  categorie_controller.getNotesByFournisseurId
+);
+
 module.exports = router;

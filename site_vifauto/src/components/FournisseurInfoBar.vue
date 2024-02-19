@@ -48,25 +48,112 @@
           </table>
         </div>
         <p :class="{ active: showNote }" @click="toggleNote()">
-          Temps de reponse : 20/20
+          Temps de reponse :
+          {{ notes.moyenne ? notes.moyenne + "/20" : "Non renseigné" }}
         </p>
         <div class="note" v-show="showNote">
           <table>
             <tr>
-              <td class="critere">Critère 1</td>
-              <td class="note">20/20</td>
+              <td class="critere">Accueil comptoir</td>
+              <td class="note">
+                {{
+                  notes.accueil_comptoir
+                    ? notes.accueil_comptoir + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
             </tr>
             <tr>
-              <td class="critere">Critère 2</td>
-              <td class="note">18/20</td>
+              <td class="critere">Temps de service</td>
+              <td class="note">
+                {{
+                  notes.temps_service
+                    ? notes.temps_service + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
             </tr>
             <tr>
-              <td class="critere">Critère 3</td>
-              <td class="note">15/20</td>
+              <td class="critere">Rapidité pièce comptoir</td>
+              <td class="note">
+                {{
+                  notes.rapidite_piece_comptoir
+                    ? notes.rapidite_piece_comptoir + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
             </tr>
             <tr>
-              <td class="critere">Critère 4</td>
-              <td class="note">17/20</td>
+              <td class="critere">Accueil téléphonique</td>
+              <td class="note">
+                {{
+                  notes.accueil_telephonique
+                    ? notes.accueil_telephonique + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
+            </tr>
+            <tr>
+              <td class="critere">Commercial</td>
+              <td class="note">
+                {{
+                  notes.commercial ? notes.commercial + "/20" : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
+            </tr>
+            <tr>
+              <td class="critere">Gestion des retours</td>
+              <td class="note">
+                {{
+                  notes.gestion_retour
+                    ? notes.gestion_retour + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
+            </tr>
+            <tr>
+              <td class="critere">Gestion garantie</td>
+              <td class="note">
+                {{
+                  notes.gestion_garantie
+                    ? notes.gestion_garantie + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
+            </tr>
+            <tr>
+              <td class="critere">Politique interne</td>
+              <td class="note">
+                {{
+                  notes.politique_interne
+                    ? notes.politique_interne + "/20"
+                    : "Non renseigné"
+                }}
+              </td>
+              <td>
+                <i class="fa-solid fa-pen"></i>
+              </td>
             </tr>
           </table>
         </div>
@@ -82,6 +169,7 @@ export default {
     return {
       fournisseur: [],
       horaires: [],
+      notes: {},
       showHoraire: false,
       showNote: false,
       editMode: {}, // Nouvelle propriété pour gérer l'édition des horaires
@@ -94,6 +182,7 @@ export default {
     // Appel de la fonction pour récupérer les informations du fournisseur lors du montage du composant
     this.getFournisseur();
     this.getHoraires();
+    this.getNotes();
   },
   methods: {
     toggleHoraire() {
@@ -168,12 +257,25 @@ export default {
         console.error("Error fetching horaires:", error);
       }
     },
+
+    async getNotes() {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/notes/id=${this.fournisseurId}`
+        );
+        this.notes = response.data[0];
+        console.log(this.notes);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
+    },
   },
   watch: {
     $route() {
       this.fournisseurId = parseInt(this.$route.params.id);
       this.getFournisseur();
       this.getHoraires();
+      this.getNotes();
     },
   },
 };
@@ -221,14 +323,16 @@ export default {
           text-align: right;
           padding-right: 10px;
         }
-        .heures {
-          i {
-            margin-left: 8px;
-            font-size: 0.8rem;
-          }
-          i:hover {
-            cursor: pointer;
-          }
+      }
+
+      .heures,
+      .note {
+        i {
+          margin-left: 8px;
+          font-size: 0.8rem;
+        }
+        i:hover {
+          cursor: pointer;
         }
       }
       .note {
