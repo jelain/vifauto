@@ -12,9 +12,14 @@ CREATE TABLE Piece (
 
 CREATE TABLE TempsReponse (
     id SERIAL PRIMARY KEY,
-    parametre1 INT,
-    parametre2 INT,
-    parametre3 INT,
+    accueil_comptoir INT,
+    temps_service INT,
+    rapidite_piece_comptoir INT,
+    accueil_telephonique INT,
+    commercial INT,
+    gestion_retour INT,
+    gestion_garantie INT,
+    politique_interne INT,
     moyenne DOUBLE PRECISION
 );
 

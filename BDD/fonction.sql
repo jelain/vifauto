@@ -5,19 +5,39 @@ DECLARE
 BEGIN
     -- Compter le nombre de paramètres non nuls
     param_count := 0;
-    IF NEW.parametre1 IS NOT NULL THEN
+    IF NEW.accueil_comptoir IS NOT NULL THEN
         param_count := param_count + 1;
     END IF;
-    IF NEW.parametre2 IS NOT NULL THEN
+    IF NEW.temps_service IS NOT NULL THEN
         param_count := param_count + 1;
     END IF;
-    IF NEW.parametre3 IS NOT NULL THEN
+    IF NEW.rapidite_piece_comptoir IS NOT NULL THEN
         param_count := param_count + 1;
+    END IF;
+
+    IF NEW.accueil_telephonique IS NOT NULL THEN                                                                                                                                                                             
+        param_count := param_count + 1;                                                                                                                                                                                       
+    END IF;                                                                                                                                                                                                                 
+    
+    IF NEW.commercial IS NOT NULL THEN                                                                                                                                                                                      
+        param_count := param_count + 1;                                                                                                                                                                                       
+    END IF;                                                                                                                                                                                                                   
+    
+    IF NEW.gestion_retour IS NOT NULL THEN                                                                                                                                                                                    
+        param_count := param_count + 1;                                                                                                                                                                                       
+    END IF;                                                                                                                                                                                                                   
+    
+    IF NEW.gestion_garantie IS NOT NULL THEN                                                                                                                                                                                  
+        param_count := param_count + 1;                                                                                                                                                                                       
+    END IF;   
+    
+    IF NEW.politique_interne IS NOT NULL THEN                                                                                                                                                                                 
+        param_count := param_count + 1;                                                                                                                                                                                      
     END IF;
 
     -- Éviter une division par zéro
     IF param_count > 0 THEN
-        NEW.moyenne := (NEW.parametre1 + NEW.parametre2 + NEW.parametre3) / param_count;
+        NEW.moyenne := (NEW.accueil_comptoir + NEW.temps_service + NEW.rapidite_piece_comptoir + NEW.accueil_telephonique + NEW.commercial + NEW.gestion_retour + NEW.gestion_garantie + NEW.politique_interne) / param_count;
     ELSE
         NEW.moyenne := NULL;
     END IF;
@@ -41,8 +61,8 @@ BEGIN
     -- Vérifier si temps_reponse_id est NULL
     IF NEW.temps_reponse_id IS NULL THEN
         -- Insérer une nouvelle ligne dans la table TempsReponse avec des paramètres NULL
-        INSERT INTO TempsReponse (parametre1, parametre2, parametre3, moyenne)
-        VALUES (NULL, NULL, NULL, NULL)
+        INSERT INTO TempsReponse (accueil_comptoir, temps_service, rapidite_piece_comptoir, accueil_telephonique, commercial, gestion_retour, gestion_garantie, politique_interne, moyenne)
+        VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
         RETURNING id INTO nouveau_temps_reponse_id;
 
         -- Mettre l'ID du nouveau TempsReponse dans temps_reponse_id du fournisseur

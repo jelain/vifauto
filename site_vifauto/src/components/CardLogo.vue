@@ -12,9 +12,7 @@ export default {
   },
   methods: {
     getImageUrl(url) {
-      const basePath = this.$route.path.includes("fournisseur")
-        ? "/fournisseur/"
-        : "/marque/";
+      const basePath = "/fournisseur&marque/";
       return `${basePath}${url}`;
     },
   },

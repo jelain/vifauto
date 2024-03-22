@@ -85,4 +85,18 @@ module.exports = {
       });
     }
   },
+
+  updateNote: async (req, res) => {
+    const { fournisseurId } = req.params;
+    const { critereNom, newNote } = req.body;
+
+    try {
+      await dbModel.updateNote(fournisseurId, critereNom, newNote);
+
+      return res.status(200).json({ message: "Note updated successfully" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  },
 };

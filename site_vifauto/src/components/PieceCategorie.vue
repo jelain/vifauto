@@ -9,9 +9,10 @@
     <div class="marques" v-if="showMarque[i]">
       <img
         v-for="marque in piece['marques_info']"
-        :src="`/marque/${marque[image_url]}`"
+        :src="`/fournisseur&marque/${marque[image_url]}`"
         :alt="marque[nom]"
         :key="marque[id]"
+        @click="navigateToDetails(marque[id])"
       />
     </div>
   </div>
@@ -50,6 +51,10 @@ export default {
     },
     toggleMarque(i) {
       this.showMarque[i] = !this.showMarque[i];
+    },
+    navigateToDetails(marqueId) {
+      const link = `/marque/id=${marqueId}`;
+      this.$router.push(link);
     },
   },
 };

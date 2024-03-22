@@ -1,7 +1,5 @@
 <template>
   <FournisseurInfoBar />
-  <!--<h1>ID: {{ $route.params.id }}</h1> -->
-
   <div class="fournisseur-detail">
     <h1>Categorie</h1>
     <div class="container">

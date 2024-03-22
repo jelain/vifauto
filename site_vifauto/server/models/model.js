@@ -72,6 +72,13 @@ const dbModel = {
     const { rows } = await pool.query(query, [fournisseurId]);
     return rows[0]; // Retourne le premier résultat trouvé
   },
+
+  getMarqueById: async (marqueId) => {
+    const query = "SELECT * FROM marque WHERE id = $1";
+    const { rows } = await pool.query(query, [marqueId]);
+    return rows[0]; // Retourne le premier résultat trouvé
+  },
+
   getHorairesByFournisseurId: async (fournisseurId) => {
     const query = "SELECT * FROM horaire WHERE fournisseur_id = $1 ORDER BY id";
     const { rows } = await pool.query(query, [fournisseurId]);
@@ -106,6 +113,48 @@ const dbModel = {
     const { rows } = await pool.query(query, [fournisseurId]);
     return rows;
   },
-};
 
+  updateNote: async (fournisseurId, critereNom, newNote) => {
+    try {
+      // Validez que critereNom est un nom de colonne autorisé pour éviter les attaques par injection SQL
+      const colonnesAutorisees = [
+        "accueil_comptoir",
+        "temps_service",
+        "rapidite_piece_comptoir",
+        "accueil_telephonique",
+        "commercial",
+        "gestion_retour",
+        "gestion_garantie",
+        "politique_interne",
+      ];
+      if (!colonnesAutorisees.includes(critereNom)) {
+        throw new Error(`Le critère spécifié n'est pas valide.`);
+      }
+
+      const query = `
+        UPDATE TempsReponse
+        SET ${critereNom} = $1
+        WHERE id = $2
+      `;
+      await pool.query(query, [newNote, fournisseurId]);
+    } catch (error) {
+      throw new Error(`Error updating note: ${error.message}`);
+    }
+  },
+  getFournisseurByMarqueId: async (marqueId) => {
+    const query = {
+      text: `
+      SELECT f.id, f.nom, f.image_url, f.temps_reponse_id
+      FROM Fournisseur f
+      INNER JOIN FournisseurMarque fm ON f.id = fm.fournisseur_id
+      INNER JOIN Marque m ON fm.marque_id = m.id
+      WHERE m.id = $1
+      `,
+      values: [marqueId],
+    };
+
+    const result = await pool.query(query);
+    return result.rows;
+  },
+};
 module.exports = dbModel;

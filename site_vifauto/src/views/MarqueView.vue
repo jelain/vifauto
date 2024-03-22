@@ -10,6 +10,8 @@
         :key="marque.id"
         :nom="marque.nom"
         :image_url="marque.image_url"
+        :marques="marques"
+        @click="navigateToDetails(marque.id)"
       />
     </div>
     <div
@@ -64,6 +66,12 @@ export default {
       .catch((error) => {
         console.error("Erreur lors de la récupération des marques", error);
       });
+  },
+  methods: {
+    navigateToDetails(marqueId) {
+      const link = `/marque/id=${marqueId}`;
+      this.$router.push(link);
+    },
   },
 };
 </script>

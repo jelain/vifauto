@@ -2,7 +2,9 @@
   <div class="header">
     <div class="navbar">
       <div class="content">
-        <img src="/vifauto_logo.png" />
+        <router-link to="/fournisseur">
+          <img src="/vifauto_logo.png" />
+        </router-link>
         <ul>
           <router-link to="/fournisseur">
             <li

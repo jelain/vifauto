@@ -1,33 +1,35 @@
 const express = require("express");
-const categorie_controller = require("../controllers/FournisseurDetailController");
+const fournisseur_detail = require("../controllers/FournisseurDetailController");
 
 const router = express.Router();
 
 router.get(
   "/fournisseurs/id=:fournisseurId",
-  categorie_controller.getFournisseurById
+  fournisseur_detail.getFournisseurById
 );
 
 router.get(
   "/categories/id=:fournisseurId",
-  categorie_controller.getCategorieByFournisseurId
+  fournisseur_detail.getCategorieByFournisseurId
 );
 
 router.get(
   "/horaires/id=:fournisseurId",
-  categorie_controller.getHorairesByFournisseurId
+  fournisseur_detail.getHorairesByFournisseurId
 );
 
 router.get(
   "/fournisseurs/id=:fournisseurId/categorie=:categorieId",
-  categorie_controller.getPiecesMarqueByCategorieIdAndFournisseurId
+  fournisseur_detail.getPiecesMarqueByCategorieIdAndFournisseurId
 );
 
-router.put("/horaires/set/id=:jourId", categorie_controller.updateHoraire);
+router.put("/horaires/set/id=:jourId", fournisseur_detail.updateHoraire);
 
 router.get(
   "/notes/id=:fournisseurId",
-  categorie_controller.getNotesByFournisseurId
+  fournisseur_detail.getNotesByFournisseurId
 );
+
+router.put("/notes/set/id=:fournisseurId", fournisseur_detail.updateNote);
 
 module.exports = router;

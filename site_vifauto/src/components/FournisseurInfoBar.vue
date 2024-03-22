@@ -12,169 +12,45 @@
         <p :class="{ active: showHoraire }" @click="toggleHoraire()">
           Horaires d'ouverture et de fermeture
         </p>
-        <div class="horaire" v-show="showHoraire">
-          <table>
-            <tr v-for="jour in horaires" :key="jour">
-              <td class="jour">{{ jour.jour_semaine }}</td>
-              <td class="heures">
-                <template v-if="editMode[jour.id]">
-                  <input type="time" v-model="newOuvertue[jour.id]" />
-                  -
-                  <input type="time" v-model="newFermeture[jour.id]" />
-                  <i
-                    class="fa-solid fa-pen"
-                    @click="saveAndToggle(jour.id)"
-                  ></i>
-                </template>
-                <template v-else>
-                  {{
-                    jour.heure_ouverture
-                      ? jour.heure_ouverture.slice(0, 5)
-                      : "Non renseigné"
-                  }}
-                  -
-                  {{
-                    jour.heure_fermeture
-                      ? jour.heure_fermeture.slice(0, 5)
-                      : "Non renseigné"
-                  }}
-                  <i
-                    class="fa-solid fa-pen"
-                    @click="toggleEditMode(jour.id)"
-                  ></i>
-                </template>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <FournisseurHoraire
+          v-show="showHoraire"
+          :horaires="horaires"
+          @save_horaire_done="getHoraires"
+        />
         <p :class="{ active: showNote }" @click="toggleNote()">
           Temps de reponse :
-          {{ notes.moyenne ? notes.moyenne + "/20" : "Non renseigné" }}
+          <span :class="getNoteColor(notes.moyenne)">
+            {{ notes.moyenne ? notes.moyenne + "/20" : "Non renseigné" }}
+          </span>
         </p>
-        <div class="note" v-show="showNote">
-          <table>
-            <tr>
-              <td class="critere">Accueil comptoir</td>
-              <td class="note">
-                {{
-                  notes.accueil_comptoir
-                    ? notes.accueil_comptoir + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Temps de service</td>
-              <td class="note">
-                {{
-                  notes.temps_service
-                    ? notes.temps_service + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Rapidité pièce comptoir</td>
-              <td class="note">
-                {{
-                  notes.rapidite_piece_comptoir
-                    ? notes.rapidite_piece_comptoir + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Accueil téléphonique</td>
-              <td class="note">
-                {{
-                  notes.accueil_telephonique
-                    ? notes.accueil_telephonique + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Commercial</td>
-              <td class="note">
-                {{
-                  notes.commercial ? notes.commercial + "/20" : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Gestion des retours</td>
-              <td class="note">
-                {{
-                  notes.gestion_retour
-                    ? notes.gestion_retour + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Gestion garantie</td>
-              <td class="note">
-                {{
-                  notes.gestion_garantie
-                    ? notes.gestion_garantie + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="critere">Politique interne</td>
-              <td class="note">
-                {{
-                  notes.politique_interne
-                    ? notes.politique_interne + "/20"
-                    : "Non renseigné"
-                }}
-              </td>
-              <td>
-                <i class="fa-solid fa-pen"></i>
-              </td>
-            </tr>
-          </table>
-        </div>
+        <FournisseurTempsReponse
+          v-show="showNote"
+          :fournisseurId="fournisseurId"
+          :notes="notes"
+          :getNoteColor="getNoteColor"
+          @save_note_done="getNotes"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import FournisseurHoraire from "./FournisseurHoraire.vue";
+import FournisseurTempsReponse from "./FournisseurTempsReponse.vue";
 import axios from "axios";
 export default {
+  components: {
+    FournisseurHoraire,
+    FournisseurTempsReponse,
+  },
   data() {
     return {
-      fournisseur: [],
       horaires: [],
-      notes: {},
+      fournisseur: [],
+      notes: [],
       showHoraire: false,
       showNote: false,
-      editMode: {}, // Nouvelle propriété pour gérer l'édition des horaires
-      newOuvertue: {}, // Nouvelle propriété
-      newFermeture: {},
     };
   },
   mounted() {
@@ -185,6 +61,18 @@ export default {
     this.getNotes();
   },
   methods: {
+    getNoteColor(note) {
+      // Déterminer la couleur en fonction de la note
+      if (note !== null) {
+        if (note >= 15) {
+          return "green"; // Vert pour une note de 15 ou plus
+        } else if (note >= 10) {
+          return "orange"; // Orange pour une note entre 10 et 14
+        } else {
+          return "red"; // Rouge pour une note de moins de 10
+        }
+      }
+    },
     toggleHoraire() {
       this.showHoraire = !this.showHoraire;
       this.showNote = false;
@@ -192,48 +80,6 @@ export default {
     toggleNote() {
       this.showNote = !this.showNote;
       this.showHoraire = false;
-    },
-
-    saveAndToggle(jourId) {
-      this.saveEdit(jourId)
-        .then(() => {
-          // Mettre à jour localement les valeurs des horaires
-          const index = this.horaires.findIndex((jour) => jour.id === jourId);
-          if (index !== -1) {
-            this.horaires[index].heure_ouverture = this.newOuvertue[jourId];
-            this.horaires[index].heure_fermeture = this.newFermeture[jourId];
-          }
-        })
-        .finally(() => {
-          // Toggle edit mode après la sauvegarde
-          this.toggleEditMode(jourId);
-        });
-    },
-
-    toggleEditMode(jourId) {
-      this.editMode[jourId] = !this.editMode[jourId];
-      // Initialiser la valeur éditée avec la valeur actuelle de l'horaire
-      console.log(this.newOuvertue[jourId]);
-      console.log(this.newFermeture[jourId]);
-    },
-
-    async saveEdit(jourId) {
-      try {
-        const response = await axios.put(
-          `http://localhost:3000/api/horaires/set/id=${jourId}`,
-          {
-            heureOuverture: this.newOuvertue[jourId],
-            heureFermeture: this.newFermeture[jourId],
-            jourId: jourId,
-            fournisseurId: this.fournisseurId,
-          }
-        );
-
-        console.log(response.data); // Si vous voulez afficher la réponse
-        // Mettre à jour l'affichage si nécessaire
-      } catch (error) {
-        console.error("Error updating horaire:", error);
-      }
     },
 
     async getFournisseur() {
@@ -246,7 +92,6 @@ export default {
         console.error("Error fetching fournisseur:", error);
       }
     },
-
     async getHoraires() {
       try {
         const response = await axios.get(
@@ -257,7 +102,6 @@ export default {
         console.error("Error fetching horaires:", error);
       }
     },
-
     async getNotes() {
       try {
         const response = await axios.get(
@@ -316,17 +160,8 @@ export default {
       .active {
         font-weight: 500;
       }
-      .horaire {
-        display: flex;
-        justify-content: right;
-        .jour {
-          text-align: right;
-          padding-right: 10px;
-        }
-      }
-
       .heures,
-      .note {
+      .notes {
         i {
           margin-left: 8px;
           font-size: 0.8rem;
@@ -335,16 +170,18 @@ export default {
           cursor: pointer;
         }
       }
-      .note {
-        display: flex;
-        justify-content: right;
-        .critere {
-          padding-right: 10px;
-        }
+      .info > *:nth-child(3) {
+        margin-top: 10px;
       }
-    }
-    .info > *:nth-child(3) {
-      margin-top: 10px;
+      .green {
+        color: #37be6b;
+      }
+      .orange {
+        color: #e68009;
+      }
+      .red {
+        color: #dd2d26;
+      }
     }
   }
 }

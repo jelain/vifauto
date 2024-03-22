@@ -206,4 +206,4 @@ INSERT INTO FournisseurMarque (fournisseur_id, marque_id) VALUES
 
 
 INSERT INTO PieceMarque (piece_id, marque_id) VALUES 
-    (1,10),(1,30),(1,19),(1,130),
+    (1,10),(1,30),(1,19),(1,130),(8,1),(9,1)(10,1),(13,1),(14,2)
